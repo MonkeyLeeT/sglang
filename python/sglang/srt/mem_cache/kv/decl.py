@@ -44,6 +44,19 @@ class StateLifetime(msgspec.Struct, frozen=True, tag="state"):
 KVLifetime = Union[FullLifetime, WindowLifetime, StateLifetime]
 
 
+def declared_lifetime_types(model_config) -> frozenset:
+    """The lifetimes a model's layers declare: full attention always, sliding
+    windows and recurrent state when the model has them."""
+    from sglang.srt.configs.hybrid_arch import mambaish_config
+
+    types = {FullLifetime}
+    if model_config.is_hybrid_swa:
+        types.add(WindowLifetime)
+    if mambaish_config(model_config) is not None:
+        types.add(StateLifetime)
+    return frozenset(types)
+
+
 class MHAGeometry(msgspec.Struct, frozen=True, kw_only=True):
     head_num: int  # per rank
     head_dim: int
