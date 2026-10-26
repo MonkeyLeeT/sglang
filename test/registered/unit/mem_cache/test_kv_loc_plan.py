@@ -189,7 +189,6 @@ class TestKVLocPlan(CustomTestCase):
         draft_pool = UnifiedDraftKVPool(
             unified_buffer=pool,
             host_sub_pool_name="full",
-            host_allocator=self.allocator,
             layer_lanes={0: 0},
             page_size=_PS,
         )
